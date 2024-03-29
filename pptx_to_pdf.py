@@ -2,6 +2,12 @@
 Converts all pptx files under a folder into pdf files.
 It requires PowerPoint and it is limited to Windows.
 
+Useful information regarding Python and PowerPoint at:
+https://stackoverflow.com/questions/45316940/error-using-comtypes-client-to-convert-a-pptx-file-into-pdf
+https://stackoverflow.com/questions/64783044/export-powerpoint-to-mp4-by-script-with-dynamic-slide-duration
+If you don't want to use Python but VBA:
+https://www.brightcarbon.com/blog/how-to-use-vba-in-powerpoint/
+
 Aldebaro. Mar 2024.
 '''
 import os
