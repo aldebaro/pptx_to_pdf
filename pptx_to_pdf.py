@@ -1,5 +1,5 @@
 '''
-Converts all pptx files under a folder into pdf files.
+Converts all pptx files under a folder (or a single pptx file) into pdf files.
 It requires PowerPoint and it is limited to Windows.
 I chose to use PowerPoint itself to perform the conversion in
 order to avoid formatting / compatibility issues with third
@@ -63,14 +63,19 @@ def get_files_with_extension(path, recurse=True, file_types=(".pptx")):
     return list_of_files
 
 
-def convert_pptx_to_pdf(input_folder, output_folder, recurse=True):
-    list_of_files = get_files_with_extension(input_folder, recurse=recurse)
-    N = len(list_of_files)
-    if recurse:
-        print("Found", N, "files with extension pptx with a recursive search inside folder", input_folder)
+def convert_pptx_to_pdf(input_path, output_folder, recurse=True):
+    if os.path.isfile(input_path):
+        list_of_files = [input_path]
+        print("Found 1 file with extension pptx:", input_path)
     else:
-        print("Found", N, "files with extension pptx under folder",
-              input_folder, "(did not conduct a recursive search)")
+        list_of_files = get_files_with_extension(input_path, recurse=recurse)
+        N = len(list_of_files)
+        if recurse:
+            print(
+                "Found", N, "files with extension pptx with a recursive search inside folder", input_path)
+        else:
+            print("Found", N, "files with extension pptx under folder",
+                  input_path, "(did not conduct a recursive search)")
     file_num = 1
     for input_file in list_of_files:
         # input_file = os.path.join(root, filename)
@@ -89,27 +94,27 @@ def convert_pptx_to_pdf(input_folder, output_folder, recurse=True):
 if __name__ == "__main__":
     # Create an ArgumentParser instance
     parser = argparse.ArgumentParser(
-        description="Convert all pptx files in a folder into pdf files.",
-        epilog="Usage: <input_folder> <output_folder>")
+        description="Convert all pptx files in a folder (or a single pptx file) into pdf files.",
+        epilog="Usage: <input_folder_or_file> <output_folder>")
 
     # Add positional arguments
-    parser.add_argument("input_folder", type=str,
-                        help="Input folder with PPTX files.")
+    parser.add_argument("input_path", type=str,
+                        help="Input folder with PPTX files, or path to a single PPTX file.")
     parser.add_argument("output_folder", type=str,
                         help="Output folder where the PDF files will be saved (it will be created if it does not exist).")
 
     # Add optional arguments
     parser.add_argument('-r', '--recursively', action='store_true',
-                        help="Search input folder recursively (look inside subfolders).")
+                        help="Search input folder recursively (look inside subfolders). Ignored if input_path is a single file.")
 
     # Parse the command-line arguments
     args = parser.parse_args()
 
     # Access the parsed arguments
-    input_folder_path = args.input_folder
+    input_path = args.input_path
     output_folder_path = args.output_folder
     recurse = args.recursively
 
     # Convert to PDF
     create_folder_if_not_exists(output_folder_path)
-    convert_pptx_to_pdf(input_folder_path, output_folder_path, recurse=recurse)
+    convert_pptx_to_pdf(input_path, output_folder_path, recurse=recurse)
